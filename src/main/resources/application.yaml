@@ -1,0 +1,46 @@
+spring:
+  profiles:
+    active: dev
+
+#mybatis config begin
+mybatis:
+  mapper_locations: classpath:mapper/*.xml
+#mybatis config end
+
+#wx config begin
+wx:
+  app:
+    appid: 123456789
+    secret: 987654321
+#wx config end
+
+---
+#DataSource config begin
+spring:
+  profiles: dev
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/mydb?autoReconnect=true&autoReconnectForPools=true&allowMultiQueries=true
+    username: root
+    password: 123456
+    hikari:
+      maximumPoolSize: 20
+
+#DataSource config end
+
+---
+#DataSource config begin
+spring:
+  profiles: test
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://10.1.1.85:3308/jfzpay_test?autoReconnect=true&autoReconnectForPools=true&allowMultiQueries=true
+    username: root
+    password: zmxncbvg
+    hikari:
+          maximumPoolSize: 100
+
+#DataSource config end
+
