@@ -14,6 +14,11 @@ wx:
     secret: 987654321
 #wx config end
 
+#file config begin
+file:
+  location: /Users/romanluo/workspace/jinxin/target/file
+#file config end
+
 ---
 #DataSource config begin
 spring:
