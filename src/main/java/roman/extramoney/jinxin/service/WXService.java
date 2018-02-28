@@ -1,5 +1,6 @@
 package roman.extramoney.jinxin.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -11,6 +12,8 @@ import roman.extramoney.jinxin.exception.JInXinRunTimeException;
 import roman.extramoney.jinxin.model.Account;
 
 import javax.annotation.Resource;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -24,6 +27,8 @@ public class WXService {
 
     @Resource
     private AccountService accountService;
+
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     private RestTemplate restTemplate;
 
@@ -45,7 +50,14 @@ public class WXService {
 
     private Map<String, String> wxLogin(String code) {
         String url = String.format(LOGIN_URL, appid, secret, code);
-        Map<String, String> responseMap = restTemplate.getForObject(url,Map.class);
+        String respJson = restTemplate.getForObject(url,String.class);
+        Map<String, String> responseMap = null;
+        try {
+            responseMap = objectMapper.readValue(respJson,
+                    objectMapper.getTypeFactory().constructParametricType(HashMap.class,String.class,String.class));
+        } catch (IOException e) {
+            throw new JInXinRunTimeException(e.getMessage());
+        }
         String errcode = responseMap.get("errcode");
         if(StringUtils.isNotEmpty(errcode)){
             throw new JInXinRunTimeException(NumberUtils.toInt(errcode),responseMap.get("errmsg"));
