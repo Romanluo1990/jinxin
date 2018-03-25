@@ -14,4 +14,10 @@ public class ForumPostService extends BaseService<ForumPostDao,ForumPost>{
     public List<ForumPost> pageByAccountId(long accountId, Date fromDate, Date toDate, int pageNum, int pageSize) {
         return dao.pageByAccountId(accountId,fromDate,toDate,pageNum,pageSize);
     }
+
+    public List<ForumPost> page(Date fromDate, Date toDate, int pageNum, int pageSize) {
+        return dao.page(fromDate,toDate,pageNum,pageSize);
+    }
+
+
 }

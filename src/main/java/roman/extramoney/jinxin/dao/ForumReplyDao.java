@@ -12,4 +12,6 @@ public interface ForumReplyDao extends BaseDao<ForumReply>{
     List<ForumReply> pageByAccountId(long accountId, Date fromDate, Date toDate, int pageNum, int pageSize);
 
     List<ForumReply> pageByPostId(long postId, Date fromDate, Date toDate, int pageNum, int pageSize);
+
+    List<ForumReply> page(Date fromDate, Date toDate, int pageNum, int pageSize);
 }

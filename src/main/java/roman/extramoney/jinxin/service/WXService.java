@@ -5,7 +5,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import roman.extramoney.jinxin.exception.JInXinRunTimeException;
@@ -40,12 +39,13 @@ public class WXService {
         this.restTemplate = new RestTemplateBuilder().build();
     }
 
-    public void login(String code){
+    public Account login(String code){
         Map<String, String> responseMap = wxLogin(code);
         String openId = responseMap.get("openid");
         Account account = accountService.getByOpenId(openId);
         if(account == null)
             throw new JInXinRunTimeException(405, "未知用户");
+        return account;
     }
 
     private Map<String, String> wxLogin(String code) {
@@ -65,10 +65,10 @@ public class WXService {
         return responseMap;
     }
 
-    public void register(String code,String nickName){
+    public void register(String code, String nickName, int type, String phone){
         Map<String, String> responseMap = wxLogin(code);
         String openId = responseMap.get("openid");
-        accountService.register(openId,nickName);
+        accountService.register(openId,nickName,type,phone);
     }
 
     public String getAppid() {

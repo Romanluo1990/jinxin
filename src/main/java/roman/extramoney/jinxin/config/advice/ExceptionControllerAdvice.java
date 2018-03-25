@@ -1,5 +1,7 @@
 package roman.extramoney.jinxin.config.advice;
 
+import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.authz.UnauthorizedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -18,12 +20,13 @@ import javax.servlet.http.HttpServletRequest;
  * Created by jackie.yu on 2017/7/27.
  * 参考 springboot Error Handling
  */
+@Slf4j
 @ControllerAdvice(basePackages = "roman.extramoney.jinxin.controller")
 public class ExceptionControllerAdvice extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(Throwable.class)
     @ResponseBody
-    ResponseEntity handleControllerException(HttpServletRequest request, Throwable ex) {
+    public ResponseEntity handleControllerException(HttpServletRequest request, Throwable ex) {
         HttpStatus status = getStatus(request);
         int statusCode = HttpStatus.INTERNAL_SERVER_ERROR.value();  // 默认500，服务器内部异常
         if (ex instanceof JInXinParamsException) {
@@ -32,7 +35,10 @@ public class ExceptionControllerAdvice extends ResponseEntityExceptionHandler {
             statusCode = ((JInXinRunTimeException) ex).getExceptionCode();
         }else if (ex instanceof JinXinException) {
             statusCode = ((JinXinException) ex).getExceptionCode();
+        }else if(ex instanceof UnauthorizedException){
+            statusCode = 403;
         }
+        log.error("handle error",ex);
         return new ResponseEntity(ApiResponse.failure(statusCode, ex.getMessage()), status);
     }
 

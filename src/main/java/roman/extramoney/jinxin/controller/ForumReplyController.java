@@ -31,15 +31,14 @@ public class ForumReplyController extends BaseController<ForumReplyService>{
         return ForumReply;
     }
 
-    @RequestMapping(value = "account_{accountId}/page",method = RequestMethod.GET)
+    @RequestMapping(value = "account/page",method = RequestMethod.GET)
     @ApiOperation(value="根据用户分页获取帖子回复")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "accountId", value = "用户ID", required = true, dataType = "long", paramType = "path",example = "1"),
             @ApiImplicitParam(name = "fromDate", value = "起始时间", required = false, dataType = "ljava.util.Date", paramType = "query",example = "2018-01-01 00:00:00"),
             @ApiImplicitParam(name = "toDate", value = "结束时间", required = false, dataType = "java.util.Date", paramType = "query",example = "2018-01-02 00:00:00"),
             @ApiImplicitParam(name = "pageNum", value = "页码", required = true, dataType = "int", paramType = "query",example = "1"),
             @ApiImplicitParam(name = "pageSize", value = "条数", required = true, dataType = "int", paramType = "query",example = "10")})
-    private List<ForumReply> pageByAccountId(@PathVariable long accountId, @RequestParam(required = false) Date fromDate,
+    private List<ForumReply> pageByAccountId(long accountId, @RequestParam(required = false) Date fromDate,
                                          @RequestParam(required = false) Date toDate, int pageNum, int pageSize){
         return service.pageByAccountId(accountId,fromDate,toDate,pageNum,pageSize);
     }

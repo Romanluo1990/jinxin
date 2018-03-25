@@ -33,4 +33,8 @@ public class BaseService<D extends BaseDao<E>,E extends Identify> {
     public void saveOrUpdate(E e) {
         dao.saveOrUpdate(e);
     }
+
+    public void delete(long id) {
+        dao.deleteById(id);
+    }
 }

@@ -10,4 +10,6 @@ import java.util.List;
 public interface BuildingPropertyDao extends BaseDao<BuildingProperty>{
 
     List<BuildingProperty> pageByAccountId(long accountId, Date fromDate, Date toDate, int pageNum, int pageSize);
+
+    List<BuildingProperty> page(Integer status, Date fromDate, Date toDate, int pageNum, int pageSize);
 }

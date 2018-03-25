@@ -1,6 +1,7 @@
 package roman.extramoney.jinxin.model;
 
 import io.swagger.annotations.ApiModelProperty;
+import io.swagger.models.auth.In;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 import roman.extramoney.jinxin.model.common.Identify;
@@ -22,12 +23,29 @@ public class Account implements Identify{
     @ApiModelProperty(value = "用户昵称",example = "张宝宝")
     private String nickName;
 
+    @Column(name = "phone")
+    @ApiModelProperty(value = "电话",example = "18888888888")
+    private String phone;
+
+    @Column(name = "type")
+    @ApiModelProperty(value = "类型",example = "1")
+    private Integer type;
+
+    /**
+     * 状态（0:待审核 1:审核通过 2:审核不通过）
+     */
+    @ApiModelProperty(value = "状态（0:待审核 1:审核通过 2:审核不通)",example = "0")
+    private Integer status;
+
     @Column(name = "user_name")
     @ApiModelProperty(value = "用户名",example = "admin")
     private String userName;
 
     @ApiModelProperty(value = "密码",example = "123456")
     private String password;
+
+    @ApiModelProperty(value = "加盐",example = "123456")
+    private String salt;
 
     @Column(name = "create_time")
     @ApiModelProperty(value = "创建时间",example = "2018-01-01 00:00:00")

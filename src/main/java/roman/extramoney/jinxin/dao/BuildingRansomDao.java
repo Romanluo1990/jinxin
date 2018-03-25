@@ -11,4 +11,5 @@ public interface BuildingRansomDao extends BaseDao<BuildingRansom>{
 
     List<BuildingRansom> pageByAccountId(long accountId, Date fromDate, Date toDate, int pageNum, int pageSize);
 
+    List<BuildingRansom> page(Integer status, Date fromDate, Date toDate, int pageNum, int pageSize);
 }

@@ -16,4 +16,14 @@ public class BuildingRansomService extends BaseService<BuildingRansomDao,Buildin
         return dao.pageByAccountId(accountId,fromDate,toDate,pageNum,pageSize);
     }
 
+    public List<BuildingRansom> page(Integer status, Date fromDate, Date toDate, int pageNum, int pageSize) {
+        return dao.page(status,fromDate,toDate,pageNum,pageSize);
+    }
+
+    public void audit(long id, int status) {
+        BuildingRansom buildingRansom = new BuildingRansom();
+        buildingRansom.setId(id);
+        buildingRansom.setStatus(status);
+        dao.updateByIdSelective(buildingRansom);
+    }
 }

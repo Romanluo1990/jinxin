@@ -12,4 +12,5 @@ public interface OtherLoansDao extends BaseDao<OtherLoans>{
 
     List<OtherLoans> pageByAccountId(long accountId, Date fromDate, Date toDate, int pageNum, int pageSize);
 
+    List<OtherLoans> page(Integer status, Date fromDate, Date toDate, int pageNum, int pageSize);
 }

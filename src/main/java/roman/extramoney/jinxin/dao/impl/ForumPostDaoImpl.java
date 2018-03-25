@@ -29,4 +29,19 @@ public class ForumPostDaoImpl extends BaseDaoImpl<ForumPostMapper,ForumPost> imp
         PageHelper.orderBy("update_time desc");
         return mapper.selectByExample(example);
     }
+
+    @Override
+    public List<ForumPost> page(Date fromDate, Date toDate, int pageNum, int pageSize) {
+        Example example = new Example(ForumPost.class);
+        Example.Criteria criteria = example.createCriteria();
+        if(fromDate != null){
+            criteria.andGreaterThanOrEqualTo("createTime",fromDate);
+        }
+        if(toDate != null){
+            criteria.andLessThanOrEqualTo("createTime",toDate);
+        }
+        PageHelper.startPage(pageNum,pageSize,false);
+        PageHelper.orderBy("update_time desc");
+        return mapper.selectByExample(example);
+    }
 }

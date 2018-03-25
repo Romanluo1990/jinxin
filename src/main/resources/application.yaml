@@ -10,8 +10,8 @@ mybatis:
 #wx config begin
 wx:
   app:
-    appid: 123456789
-    secret: 987654321
+    appid: wx843fbc69f150bc81
+    secret: 71f99218047be78e56e52e4ed9d3512c
 #wx config end
 
 #file config begin

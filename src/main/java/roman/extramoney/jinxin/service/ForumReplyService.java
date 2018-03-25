@@ -18,4 +18,9 @@ public class ForumReplyService extends BaseService<ForumReplyDao,ForumReply>{
     public List<ForumReply> pageByPostId(long postId, Date fromDate, Date toDate, int pageNum, int pageSize) {
         return dao.pageByPostId(postId,fromDate,toDate,pageNum,pageSize);
     }
+
+    public List<ForumReply> page(Date fromDate, Date toDate, int pageNum, int pageSize) {
+        return dao.page(fromDate,toDate,pageNum,pageSize);
+    }
+
 }

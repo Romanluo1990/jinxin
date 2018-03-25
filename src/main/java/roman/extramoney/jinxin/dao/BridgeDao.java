@@ -12,4 +12,6 @@ public interface BridgeDao extends BaseDao<Bridge>{
     List<Bridge> pageByAccountId(long accountId, Date fromDate, Date toDate, int pageNum, int pageSize);
 
     List<Bridge> listByDate(Date date);
+
+    List<Bridge> page(Integer status, Date fromDate, Date toDate, int pageNum, int pageSize);
 }

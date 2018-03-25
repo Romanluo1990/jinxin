@@ -69,4 +69,11 @@ public class ForumPost implements Identify{
     @ApiModelProperty(value = "内容",example = "一瓶可乐烧鸡翅")
     private String content;
 
+
+    /**
+     * 附件
+     */
+    @ApiModelProperty(value = "附件",example = "http://image/a.pic,http://image/b.pic")
+    private String attachments;
+
 }
