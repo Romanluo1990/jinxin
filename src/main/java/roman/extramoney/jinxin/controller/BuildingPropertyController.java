@@ -27,10 +27,9 @@ public class BuildingPropertyController extends BaseController<BuildingPropertyS
 
     @RequestMapping(value = "saveOrUpdate",method = RequestMethod.POST)
     @ApiOperation(value="保存或更新物业详情",notes="无ID保存，有ID更新")
-    @ApiImplicitParam(name = "BuildingProperty", value = "物业信息", required = true, dataType = "roman.extramoney.jinxin.model.BuildingProperty", paramType = "body")
-    public BuildingProperty saveOrUpdate(@RequestBody BuildingProperty BuildingProperty){
-        service.saveOrUpdate(BuildingProperty);
-        return BuildingProperty;
+    public BuildingProperty saveOrUpdate(@RequestBody BuildingProperty buildingProperty){
+        service.saveOrUpdate(buildingProperty);
+        return buildingProperty;
     }
 
     @RequestMapping(value = "account/page",method = RequestMethod.GET)

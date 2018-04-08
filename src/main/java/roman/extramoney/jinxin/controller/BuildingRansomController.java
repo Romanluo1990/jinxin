@@ -27,10 +27,9 @@ public class BuildingRansomController extends BaseController<BuildingRansomServi
 
     @RequestMapping(value = "saveOrUpdate",method = RequestMethod.POST)
     @ApiOperation(value="保存或更新赎楼详情",notes="无ID保存，有ID更新")
-    @ApiImplicitParam(name = "BuildingRanSom", value = "赎楼信息", required = true, dataType = "roman.extramoney.jinxin.model.BuildingRanSom", paramType = "body")
-    public BuildingRansom saveOrUpdate(@RequestBody BuildingRansom BuildingRanSom){
-        service.saveOrUpdate(BuildingRanSom);
-        return BuildingRanSom;
+    public BuildingRansom saveOrUpdate(@RequestBody BuildingRansom buildingRansom){
+        service.saveOrUpdate(buildingRansom);
+        return buildingRansom;
     }
 
     @RequestMapping(value = "account/page",method = RequestMethod.GET)

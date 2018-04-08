@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import roman.extramoney.jinxin.model.Bridge;
 import roman.extramoney.jinxin.service.BaseService;
 import roman.extramoney.jinxin.service.BridgeService;
+import roman.extramoney.jinxin.service.SysConfigService;
 
+import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.*;
@@ -23,7 +25,8 @@ import java.util.*;
 @RestController
 public class BridgeController extends BaseController<BridgeService>{
 
-    private static final BigDecimal AMOUNT_AVAILABLE = new BigDecimal("1000");
+    @Resource
+    private SysConfigService sysConfigService;
 
     @RequestMapping(value = "get/{id}",method = RequestMethod.GET)
     @ApiOperation(value="获取过桥详情",notes = "根据ID获取过桥信息")
@@ -34,7 +37,6 @@ public class BridgeController extends BaseController<BridgeService>{
 
     @RequestMapping(value = "saveOrUpdate",method = RequestMethod.POST)
     @ApiOperation(value="保存或更新过桥详情",notes="无ID保存，有ID更新")
-    @ApiImplicitParam(name = "bridge", value = "过桥信息", required = true, dataType = "roman.extramoney.jinxin.model.Bridge", paramType = "body")
     public Bridge saveOrUpdate(@RequestBody Bridge bridge){
         service.saveOrUpdate(bridge);
         return bridge;
@@ -57,13 +59,14 @@ public class BridgeController extends BaseController<BridgeService>{
     @ApiImplicitParam(name = "dates", value = "日期，格式yyyyMMdd，逗号分开", required = true, dataType = "String", paramType = "query",example = "20180101,20180102")
     public Map<String,BigDecimal> balance(@RequestParam String dates){
         Map<String,BigDecimal> blanceMap = new HashMap<>();
+        BigDecimal amountAvailable = new BigDecimal(sysConfigService.getByKey("amountAvailable").getValue());
         Arrays.stream(dates.split(","))
                 .forEach(date -> {
                     List<Bridge> bridges = service.listByDate(date);
                     BigDecimal totalAmount = bridges.stream()
                             .map(Bridge::getAmount)
                             .reduce(BigDecimal.ZERO,(x,y)->x.add(y));
-                    BigDecimal blance = AMOUNT_AVAILABLE.subtract(totalAmount);
+                    BigDecimal blance = amountAvailable.subtract(totalAmount);
                     blanceMap.put(date,blance);
                 });
         return blanceMap;
@@ -75,13 +78,14 @@ public class BridgeController extends BaseController<BridgeService>{
     public Map<String,BigDecimal> monthBalance(@PathVariable String month) throws ParseException {
         Date date = DateUtils.parseDate(month,"yyyyMM");
         Date endDate = DateUtils.addMonths(date,1);
+        BigDecimal amountAvailable = new BigDecimal(sysConfigService.getByKey("amountAvailable").getValue());
         Map<String,BigDecimal> blanceMap = new HashMap<>();
         while (true){
             List<Bridge> bridges = service.listByDate(date);
             BigDecimal totalAmount = bridges.stream()
                     .map(Bridge::getAmount)
                     .reduce(BigDecimal.ZERO,(x,y)->x.add(y));
-            BigDecimal blance = AMOUNT_AVAILABLE.subtract(totalAmount);
+            BigDecimal blance = amountAvailable.subtract(totalAmount);
             blanceMap.put(DateFormatUtils.format(date,"yyyyMMdd"),blance);
             date = DateUtils.addDays(date,1);
             if(date.compareTo(endDate)>=0)

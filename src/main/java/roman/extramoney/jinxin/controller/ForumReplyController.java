@@ -25,10 +25,9 @@ public class ForumReplyController extends BaseController<ForumReplyService>{
 
     @RequestMapping(value = "saveOrUpdate",method = RequestMethod.POST)
     @ApiOperation(value="保存或更新帖子回复详情",notes="无ID保存，有ID更新")
-    @ApiImplicitParam(name = "ForumReply", value = "帖子回复信息", required = true, dataType = "roman.extramoney.jinxin.model.ForumReply", paramType = "body")
-    private ForumReply saveOrUpdate(@RequestBody ForumReply ForumReply){
-        service.saveOrUpdate(ForumReply);
-        return ForumReply;
+    private ForumReply saveOrUpdate(@RequestBody ForumReply forumReply){
+        service.saveOrUpdate(forumReply);
+        return forumReply;
     }
 
     @RequestMapping(value = "account/page",method = RequestMethod.GET)

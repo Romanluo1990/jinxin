@@ -8,10 +8,7 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.subject.Subject;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import roman.extramoney.jinxin.config.shiro.AccountDto;
 import roman.extramoney.jinxin.exception.JInXinRunTimeException;
 import roman.extramoney.jinxin.model.*;
@@ -46,6 +43,9 @@ public class AdminController{
 
     @Resource
     private ForumReplyService forumReplyService;
+
+    @Resource
+    private SysConfigService sysConfigService;
 
 
     @RequestMapping(value = "login",method = RequestMethod.POST)
@@ -265,4 +265,21 @@ public class AdminController{
         subject.logout();
     }
 
+    @RequiresPermissions("admin")
+    @RequestMapping(value = "sysConfid/page",method = RequestMethod.GET)
+    @ApiOperation(value="分页获取系统配置")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "pageNum", value = "页码", required = true, dataType = "int", paramType = "query",example = "1"),
+            @ApiImplicitParam(name = "pageSize", value = "条数", required = true, dataType = "int", paramType = "query",example = "10")})
+    public List<SysConfig> sysConfigPage(@RequestParam(required = false) Integer status, @RequestParam(required = false) Date fromDate,
+                                        @RequestParam(required = false) Date toDate, int pageNum, int pageSize){
+        return sysConfigService.page(pageNum,pageSize);
+    }
+
+    @RequestMapping(value = "sysConfig/saveOrUpdate",method = RequestMethod.POST)
+    @ApiOperation(value="保存或更新系统配置",notes="无ID保存，有ID更新")
+    public SysConfig saveOrUpdateSysConfig(@RequestBody SysConfig sysConfig){
+        sysConfigService.saveOrUpdate(sysConfig);
+        return sysConfig;
+    }
 }

@@ -27,10 +27,9 @@ public class OtherLoansController extends BaseController<OtherLoansService>{
 
     @RequestMapping(value = "saveOrUpdate",method = RequestMethod.POST)
     @ApiOperation(value="保存或更新其他借款详情",notes="无ID保存，有ID更新")
-    @ApiImplicitParam(name = "OtherLoans", value = "其他借款信息", required = true, dataType = "roman.extramoney.jinxin.model.OtherLoans", paramType = "body")
-    public OtherLoans saveOrUpdate(@RequestBody OtherLoans OtherLoans){
-        service.saveOrUpdate(OtherLoans);
-        return OtherLoans;
+    public OtherLoans saveOrUpdate(@RequestBody OtherLoans otherLoans){
+        service.saveOrUpdate(otherLoans);
+        return otherLoans;
     }
 
     @RequestMapping(value = "account/page",method = RequestMethod.GET)
