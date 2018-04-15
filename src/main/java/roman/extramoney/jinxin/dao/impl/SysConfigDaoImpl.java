@@ -26,7 +26,7 @@ public class SysConfigDaoImpl extends BaseDaoImpl<SysConfigMapper,SysConfig> imp
 
     @Override
     public List<SysConfig> page(int pageNum, int pageSize) {
-        PageHelper.offsetPage(pageNum,pageSize);
+        PageHelper.startPage(pageNum,pageSize);
         return mapper.selectAll();
     }
 }

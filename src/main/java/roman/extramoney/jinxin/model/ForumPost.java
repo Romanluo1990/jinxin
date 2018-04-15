@@ -76,4 +76,7 @@ public class ForumPost implements Identify{
     @ApiModelProperty(value = "附件",example = "http://image/a.pic,http://image/b.pic")
     private String attachments;
 
+    @ApiModelProperty(value = "热度",example = "1")
+    private Integer times;
+
 }

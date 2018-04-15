@@ -12,8 +12,8 @@ import java.util.List;
 @Service
 public class BuildingRansomService extends BaseService<BuildingRansomDao,BuildingRansom>{
 
-    public List<BuildingRansom> pageByAccountId(long accountId, Date fromDate, Date toDate, int pageNum, int pageSize) {
-        return dao.pageByAccountId(accountId,fromDate,toDate,pageNum,pageSize);
+    public List<BuildingRansom> pageByAccountId(long accountId, Date fromDate, Date toDate, Integer status, int pageNum, int pageSize) {
+        return dao.pageByAccountId(accountId,fromDate,toDate,status,pageNum,pageSize);
     }
 
     public List<BuildingRansom> page(Integer status, Date fromDate, Date toDate, int pageNum, int pageSize) {

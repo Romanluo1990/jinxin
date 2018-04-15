@@ -15,4 +15,8 @@
     <result column="updator" property="updator" jdbcType="VARCHAR" />
     <result column="content" property="content" jdbcType="LONGVARCHAR" />
   </resultMap>
+
+  <update id="incrementTimes">
+    UPDATE forum_post set times=times+1 where id=#{id};
+  </update>
 </mapper>

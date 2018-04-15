@@ -4,7 +4,12 @@ package roman.extramoney.jinxin.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -39,8 +44,9 @@ public class FileController {
         File downloadFile = new File(filePath, file);
         response.reset();
         response.setHeader("Content-Disposition", "attachment; filename=\"" + new String(file.getBytes("utf-8"),"iso-8859-1") + "\"");
-        response.addHeader("Content-Length", "" + file.length());
+        response.addHeader("Content-Length", "" + downloadFile.length());
         response.setContentType("application/octet-stream;charset=UTF-8");
         FileCopyUtils.copy(new FileInputStream(downloadFile),response.getOutputStream());
+
     }
 }

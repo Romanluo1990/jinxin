@@ -1,6 +1,7 @@
 package roman.extramoney.jinxin.dao.impl;
 
 import com.github.pagehelper.PageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Repository;
 import roman.extramoney.jinxin.dao.ForumPostDao;
 import roman.extramoney.jinxin.dao.mapper.ForumPostMapper;
@@ -40,8 +41,16 @@ public class ForumPostDaoImpl extends BaseDaoImpl<ForumPostMapper,ForumPost> imp
         if(toDate != null){
             criteria.andLessThanOrEqualTo("createTime",toDate);
         }
-        PageHelper.startPage(pageNum,pageSize,false);
+        PageHelper.startPage(pageNum,pageSize);
         PageHelper.orderBy("update_time desc");
         return mapper.selectByExample(example);
     }
+
+    @Override
+    @Async
+    public void incrementTimes(long id) {
+        mapper.incrementTimes(id);
+    }
+
+
 }

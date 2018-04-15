@@ -15,7 +15,7 @@ import java.util.List;
 public class BridgeDaoImpl extends BaseDaoImpl<BridgeMapper,Bridge> implements BridgeDao {
 
     @Override
-    public List<Bridge> pageByAccountId(long accountId, Date fromDate, Date toDate, int pageNum, int pageSize) {
+    public List<Bridge> pageByAccountId(long accountId, Date fromDate, Date toDate, Integer status, int pageNum, int pageSize) {
         Example example = new Example(Bridge.class);
         Example.Criteria criteria = example.createCriteria().andEqualTo("accountId", accountId);
         if(fromDate != null){
@@ -23,6 +23,9 @@ public class BridgeDaoImpl extends BaseDaoImpl<BridgeMapper,Bridge> implements B
         }
         if(toDate != null){
             criteria.andLessThanOrEqualTo("createTime",toDate);
+        }
+        if(status != null){
+            criteria.andEqualTo("status",status);
         }
         PageHelper.startPage(pageNum,pageSize,false);
         PageHelper.orderBy("update_time desc");
@@ -52,7 +55,7 @@ public class BridgeDaoImpl extends BaseDaoImpl<BridgeMapper,Bridge> implements B
         if(toDate != null){
             criteria.andLessThanOrEqualTo("createTime",toDate);
         }
-        PageHelper.startPage(pageNum,pageSize,false);
+        PageHelper.startPage(pageNum,pageSize);
         PageHelper.orderBy("update_time desc");
         return mapper.selectByExample(example);
     }

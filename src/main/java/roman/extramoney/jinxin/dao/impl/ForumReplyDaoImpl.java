@@ -55,7 +55,7 @@ public class ForumReplyDaoImpl extends BaseDaoImpl<ForumReplyMapper,ForumReply> 
         if(toDate != null){
             criteria.andLessThanOrEqualTo("createTime",toDate);
         }
-        PageHelper.startPage(pageNum,pageSize,false);
+        PageHelper.startPage(pageNum,pageSize);
         PageHelper.orderBy("update_time desc");
         return mapper.selectByExample(example);
     }

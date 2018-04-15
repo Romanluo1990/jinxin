@@ -37,10 +37,12 @@ public class OtherLoansController extends BaseController<OtherLoansService>{
     @ApiImplicitParams({
             @ApiImplicitParam(name = "fromDate", value = "起始时间", required = false, dataType = "ljava.util.Date", paramType = "query",example = "2018-01-01 00:00:00"),
             @ApiImplicitParam(name = "toDate", value = "结束时间", required = false, dataType = "java.util.Date", paramType = "query",example = "2018-01-02 00:00:00"),
+            @ApiImplicitParam(name = "status", value = "状态（0:待审核 1:审核通过 2:审核不通)", required = false, dataType = "int",allowableValues = "0,1,2",paramType = "query",example = "0"),
             @ApiImplicitParam(name = "pageNum", value = "页码", required = true, dataType = "int", paramType = "query",example = "1"),
             @ApiImplicitParam(name = "pageSize", value = "条数", required = true, dataType = "int", paramType = "query",example = "10")})
     public List<OtherLoans> pageByAccountId(long accountId, @RequestParam(required = false) Date fromDate,
-                                         @RequestParam(required = false) Date toDate, int pageNum, int pageSize){
-        return service.pageByAccountId(accountId,fromDate,toDate,pageNum,pageSize);
+                                         @RequestParam(required = false) Date toDate,
+                                            @RequestParam(required = false) Integer status, int pageNum, int pageSize){
+        return service.pageByAccountId(accountId,fromDate,toDate,status,pageNum,pageSize);
     }
 }

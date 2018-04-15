@@ -271,8 +271,7 @@ public class AdminController{
     @ApiImplicitParams({
             @ApiImplicitParam(name = "pageNum", value = "页码", required = true, dataType = "int", paramType = "query",example = "1"),
             @ApiImplicitParam(name = "pageSize", value = "条数", required = true, dataType = "int", paramType = "query",example = "10")})
-    public List<SysConfig> sysConfigPage(@RequestParam(required = false) Integer status, @RequestParam(required = false) Date fromDate,
-                                        @RequestParam(required = false) Date toDate, int pageNum, int pageSize){
+    public List<SysConfig> sysConfigPage(int pageNum, int pageSize){
         return sysConfigService.page(pageNum,pageSize);
     }
 

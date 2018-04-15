@@ -19,5 +19,9 @@ public class ForumPostService extends BaseService<ForumPostDao,ForumPost>{
         return dao.page(fromDate,toDate,pageNum,pageSize);
     }
 
-
+    @Override
+    public ForumPost getById(long id) {
+        dao.incrementTimes(id);
+        return super.getById(id);
+    }
 }
