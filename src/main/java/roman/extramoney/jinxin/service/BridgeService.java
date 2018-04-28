@@ -1,15 +1,12 @@
 package roman.extramoney.jinxin.service;
 
-import org.apache.commons.lang3.StringUtils;
+import com.github.pagehelper.PageInfo;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import roman.extramoney.jinxin.dao.BridgeDao;
-import roman.extramoney.jinxin.dao.impl.BridgeDaoImpl;
 import roman.extramoney.jinxin.model.Bridge;
 
 import java.text.ParseException;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -42,14 +39,15 @@ public class BridgeService extends BaseService<BridgeDao,Bridge>{
         return dao.listByDate(date);
     }
 
-    public List<Bridge> page(Integer status, Date fromDate, Date toDate, int pageNum, int pageSize) {
-        return dao.page(status,fromDate,toDate,pageNum,pageSize);
+    public PageInfo<Bridge> page(Integer status, Date fromDate, Date toDate, int pageNum, int pageSize) {
+        return new PageInfo<>(dao.page(status,fromDate,toDate,pageNum,pageSize));
     }
 
-    public void audit(long id, int status) {
+    public void audit(long id, int status, String statusMessage) {
         Bridge bridge = new Bridge();
         bridge.setId(id);
         bridge.setStatus(status);
+        bridge.setStatusMessage(statusMessage);
         dao.updateByIdSelective(bridge);
     }
 

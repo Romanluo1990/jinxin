@@ -45,6 +45,8 @@ public class AccountController extends BaseController<AccountService>{
         try{
             subject.login(new WxToken(code));
         }catch (AuthenticationException e){
+            if(e.getCause() instanceof JInXinRunTimeException)
+                throw (JInXinRunTimeException)e.getCause();
             throw new JInXinRunTimeException(402,"微信登陆失败");
         }
         return (AccountDto)subject.getPrincipal();

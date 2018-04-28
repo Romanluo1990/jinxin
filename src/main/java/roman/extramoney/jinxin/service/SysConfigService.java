@@ -1,5 +1,6 @@
 package roman.extramoney.jinxin.service;
 
+import com.github.pagehelper.PageInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.crypto.RandomNumberGenerator;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
@@ -28,7 +29,7 @@ public class SysConfigService extends BaseService<SysConfigDao,SysConfig>{
         return dao.getByKey(key);
     }
 
-    public List<SysConfig> page(int pageNum, int pageSize) {
-        return dao.page(pageNum,pageSize);
+    public PageInfo<SysConfig> page(int pageNum, int pageSize) {
+        return new PageInfo<>(dao.page(pageNum,pageSize));
     }
 }

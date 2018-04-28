@@ -81,6 +81,12 @@ public class BuildingRansom implements Identify{
     private Integer status;
 
     /**
+     * 审核信息
+     */
+    @ApiModelProperty(value = "审核信息",example = "审核通过")
+    private String statusMessage;
+
+    /**
      * 创建时间
      */
     @Column(name = "create_time")

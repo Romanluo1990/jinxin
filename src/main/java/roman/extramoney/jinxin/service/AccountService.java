@@ -1,5 +1,6 @@
 package roman.extramoney.jinxin.service;
 
+import com.github.pagehelper.PageInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.crypto.RandomNumberGenerator;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
@@ -10,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import roman.extramoney.jinxin.config.shiro.AccountDto;
 import roman.extramoney.jinxin.dao.AccountDao;
 import roman.extramoney.jinxin.dao.impl.AccountDaoImpl;
+import roman.extramoney.jinxin.exception.JInXinRunTimeException;
 import roman.extramoney.jinxin.model.Account;
 import roman.extramoney.jinxin.model.AccountPermission;
 import roman.extramoney.jinxin.model.Bridge;
@@ -56,10 +58,11 @@ public class AccountService extends BaseService<AccountDao,Account>{
     }
 
     @Transactional
-    public void audit(long id, int status, String permissions) {
+    public void audit(long id, int status, String permissions, String statusMessage) {
         Account account = new Account();
         account.setId(id);
         account.setStatus(status);
+        account.setStatusMessage(statusMessage);
         dao.updateByIdSelective(account);
         if(status == 1 && StringUtils.isNotEmpty(permissions))
             Arrays.stream(permissions.split(","))
@@ -85,9 +88,9 @@ public class AccountService extends BaseService<AccountDao,Account>{
         }
     }
 
-    public List<AccountDto> page(Integer status, Date fromDate, Date toDate, int pageNum, int pageSize) {
+    public PageInfo<AccountDto> page(Integer status, Date fromDate, Date toDate, int pageNum, int pageSize) {
         List<Account> accounts = dao.page(status,fromDate,toDate,pageNum,pageSize);
-        return accounts.stream().map(this::toAccountDto).collect(Collectors.toList());
+        return new PageInfo<>(accounts.stream().map(this::toAccountDto).collect(Collectors.toList()));
     }
 
     private AccountDto toAccountDto(Account account) {
@@ -95,5 +98,14 @@ public class AccountService extends BaseService<AccountDao,Account>{
         accountDto.setAccount(account);
         accountDto.setPermissions(accountPermissionService.listPermissionByAccountId(account.getId()));
         return accountDto;
+    }
+
+    public void updatePwd(long id, String oldPwd, String newPwd) {
+        Account account = dao.getById(id);
+        String encryptOldPwd = encryptPassword(oldPwd,account.getSalt());
+        if(!account.getPassword().equals(encryptOldPwd))
+            throw new JInXinRunTimeException(412);
+        account.setPassword(encryptPassword(newPwd,account.getSalt()));
+        saveOrUpdate(account);
     }
 }

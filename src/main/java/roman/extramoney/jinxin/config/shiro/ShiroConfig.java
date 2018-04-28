@@ -2,8 +2,11 @@ package roman.extramoney.jinxin.config.shiro;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
+import org.apache.shiro.authc.pam.AtLeastOneSuccessfulStrategy;
+import org.apache.shiro.authc.pam.ModularRealmAuthenticator;
 import org.apache.shiro.cache.MemoryConstrainedCacheManager;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.mgt.SecurityManager;
@@ -108,6 +111,17 @@ public class ShiroConfig {
     @Bean
     public SecurityManager securityManager() {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
+        ModularRealmAuthenticator modularRealmAuthenticator = new ModularRealmAuthenticator();
+        modularRealmAuthenticator.setAuthenticationStrategy(new AtLeastOneSuccessfulStrategy(){
+            @Override
+            public AuthenticationInfo afterAttempt(Realm realm, AuthenticationToken token, AuthenticationInfo singleRealmInfo, AuthenticationInfo aggregateInfo, Throwable t) throws AuthenticationException {
+                if(t instanceof JInXinRunTimeException){
+                    throw (JInXinRunTimeException)t;
+                }
+                return super.afterAttempt(realm, token, singleRealmInfo, aggregateInfo, t);
+            }
+        });
+        securityManager.setAuthenticator(modularRealmAuthenticator);
         securityManager.setRealms(Arrays.asList(wxRealm(),userRealm()));
         securityManager.setCacheManager(new MemoryConstrainedCacheManager());
         return securityManager;

@@ -1,5 +1,6 @@
 package roman.extramoney.jinxin.controller;
 
+import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -12,11 +13,13 @@ import org.springframework.web.bind.annotation.*;
 import roman.extramoney.jinxin.config.shiro.AccountDto;
 import roman.extramoney.jinxin.exception.JInXinRunTimeException;
 import roman.extramoney.jinxin.model.*;
+import roman.extramoney.jinxin.model.Account;
 import roman.extramoney.jinxin.service.*;
 
 import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Api("管理员接口")
 @RequestMapping("admin")
@@ -49,7 +52,7 @@ public class AdminController{
 
 
     @RequestMapping(value = "login",method = RequestMethod.POST)
-    @ApiOperation(value="登陆",notes = "通过小程序登陆返回的code登陆服务端")
+    @ApiOperation(value="登陆",notes = "通过账号密码登陆服务端")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "username", value = "用户名", required = true, dataType = "String", paramType = "form", example = "admin"),
             @ApiImplicitParam(name = "password", value = "密码", required = true, dataType = "String", paramType = "form", example = "123456789")
@@ -75,8 +78,8 @@ public class AdminController{
             @ApiImplicitParam(name = "toDate", value = "结束时间", required = false, dataType = "java.util.Date", paramType = "query",example = "2018-01-02 00:00:00"),
             @ApiImplicitParam(name = "pageNum", value = "页码", required = true, dataType = "int", paramType = "query",example = "1"),
             @ApiImplicitParam(name = "pageSize", value = "条数", required = true, dataType = "int", paramType = "query",example = "10")})
-    public List<Bridge> bridgePage(@RequestParam(required = false) Integer status,@RequestParam(required = false) Date fromDate,
-                                         @RequestParam(required = false) Date toDate, int pageNum, int pageSize){
+    public PageInfo<Bridge> bridgePage(@RequestParam(required = false) Integer status, @RequestParam(required = false) Date fromDate,
+                                       @RequestParam(required = false) Date toDate, int pageNum, int pageSize){
         return bridgeService.page(status,fromDate,toDate,pageNum,pageSize);
     }
 
@@ -89,7 +92,7 @@ public class AdminController{
             @ApiImplicitParam(name = "toDate", value = "结束时间", required = false, dataType = "java.util.Date", paramType = "query",example = "2018-01-02 00:00:00"),
             @ApiImplicitParam(name = "pageNum", value = "页码", required = true, dataType = "int", paramType = "query",example = "1"),
             @ApiImplicitParam(name = "pageSize", value = "条数", required = true, dataType = "int", paramType = "query",example = "10")})
-    public List<BuildingProperty> buildingPropertyPage(@RequestParam(required = false) Integer status, @RequestParam(required = false) Date fromDate,
+    public PageInfo<BuildingProperty> buildingPropertyPage(@RequestParam(required = false) Integer status, @RequestParam(required = false) Date fromDate,
                                               @RequestParam(required = false) Date toDate, int pageNum, int pageSize){
         return buildingPropertyService.page(status,fromDate,toDate,pageNum,pageSize);
     }
@@ -103,7 +106,7 @@ public class AdminController{
             @ApiImplicitParam(name = "toDate", value = "结束时间", required = false, dataType = "java.util.Date", paramType = "query",example = "2018-01-02 00:00:00"),
             @ApiImplicitParam(name = "pageNum", value = "页码", required = true, dataType = "int", paramType = "query",example = "1"),
             @ApiImplicitParam(name = "pageSize", value = "条数", required = true, dataType = "int", paramType = "query",example = "10")})
-    public List<BuildingRansom> buildingRansomPage(@RequestParam(required = false) Integer status, @RequestParam(required = false) Date fromDate,
+    public PageInfo<BuildingRansom> buildingRansomPage(@RequestParam(required = false) Integer status, @RequestParam(required = false) Date fromDate,
                                                       @RequestParam(required = false) Date toDate, int pageNum, int pageSize){
         return buildingRansomService.page(status,fromDate,toDate,pageNum,pageSize);
     }
@@ -117,7 +120,7 @@ public class AdminController{
             @ApiImplicitParam(name = "toDate", value = "结束时间", required = false, dataType = "java.util.Date", paramType = "query",example = "2018-01-02 00:00:00"),
             @ApiImplicitParam(name = "pageNum", value = "页码", required = true, dataType = "int", paramType = "query",example = "1"),
             @ApiImplicitParam(name = "pageSize", value = "条数", required = true, dataType = "int", paramType = "query",example = "10")})
-    public List<OtherLoans> otherLoansPage(@RequestParam(required = false) Integer status, @RequestParam(required = false) Date fromDate,
+    public PageInfo<OtherLoans> otherLoansPage(@RequestParam(required = false) Integer status, @RequestParam(required = false) Date fromDate,
                                                 @RequestParam(required = false) Date toDate, int pageNum, int pageSize){
         return otherLoansService.page(status,fromDate,toDate,pageNum,pageSize);
     }
@@ -130,7 +133,7 @@ public class AdminController{
             @ApiImplicitParam(name = "toDate", value = "结束时间", required = false, dataType = "java.util.Date", paramType = "query",example = "2018-01-02 00:00:00"),
             @ApiImplicitParam(name = "pageNum", value = "页码", required = true, dataType = "int", paramType = "query",example = "1"),
             @ApiImplicitParam(name = "pageSize", value = "条数", required = true, dataType = "int", paramType = "query",example = "10")})
-    public List<ForumPost> forumPostPage(@RequestParam(required = false) Date fromDate,
+    public PageInfo<ForumPost> forumPostPage(@RequestParam(required = false) Date fromDate,
                                          @RequestParam(required = false) Date toDate, int pageNum, int pageSize){
         return forumPostService.page(fromDate,toDate,pageNum,pageSize);
     }
@@ -143,9 +146,13 @@ public class AdminController{
             @ApiImplicitParam(name = "toDate", value = "结束时间", required = false, dataType = "java.util.Date", paramType = "query",example = "2018-01-02 00:00:00"),
             @ApiImplicitParam(name = "pageNum", value = "页码", required = true, dataType = "int", paramType = "query",example = "1"),
             @ApiImplicitParam(name = "pageSize", value = "条数", required = true, dataType = "int", paramType = "query",example = "10")})
-    public List<ForumReply> forumReplyPage(@RequestParam(required = false) Date fromDate,
-                                         @RequestParam(required = false) Date toDate, int pageNum, int pageSize){
-        return forumReplyService.page(fromDate,toDate,pageNum,pageSize);
+    public PageInfo<ForumReplyWithUser> forumReplyPage(@RequestParam(required = false) Date fromDate,
+                                                       @RequestParam(required = false) Date toDate, int pageNum, int pageSize){
+        List<ForumReplyWithUser> forumReplyWithUsers = forumReplyService.page(fromDate,toDate,pageNum,pageSize).getList().stream().map(forumReply->{
+            Account account = accountService.getById(forumReply.getAccountId());
+            return new ForumReplyWithUser(account.getNickName(),forumReply);
+        }).collect(Collectors.toList());
+        return new PageInfo<>(forumReplyWithUsers);
     }
 
     @RequiresPermissions("admin")
@@ -157,7 +164,7 @@ public class AdminController{
             @ApiImplicitParam(name = "toDate", value = "结束时间", required = false, dataType = "java.util.Date", paramType = "query",example = "2018-01-02 00:00:00"),
             @ApiImplicitParam(name = "pageNum", value = "页码", required = true, dataType = "int", paramType = "query",example = "1"),
             @ApiImplicitParam(name = "pageSize", value = "条数", required = true, dataType = "int", paramType = "query",example = "10")})
-    public List<AccountDto> accountPage(@RequestParam(required = false) Integer status, @RequestParam(required = false) Date fromDate,
+    public PageInfo<AccountDto> accountPage(@RequestParam(required = false) Integer status, @RequestParam(required = false) Date fromDate,
                                            @RequestParam(required = false) Date toDate, int pageNum, int pageSize){
         return accountService.page(status,fromDate,toDate,pageNum,pageSize);
     }
@@ -167,10 +174,11 @@ public class AdminController{
     @ApiOperation(value="审核过桥")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id", value = "过桥id", required = true, dataType = "long", paramType = "form",example = "1"),
-            @ApiImplicitParam(name = "status", value = "更新状态", allowableValues = "1,2", required = true, dataType = "int", paramType = "form",example = "1")
+            @ApiImplicitParam(name = "status", value = "更新状态", allowableValues = "1,2", required = true, dataType = "int", paramType = "form",example = "1"),
+            @ApiImplicitParam(name = "statusMessage", value = "审核信息", required = true, dataType = "string", paramType = "form",example = "审核通过")
     })
-    public void bridgeAudit(long id,int status){
-        bridgeService.audit(id,status);
+    public void bridgeAudit(long id,int status,String statusMessage){
+        bridgeService.audit(id,status,statusMessage);
     }
 
 
@@ -179,10 +187,11 @@ public class AdminController{
     @ApiOperation(value="审核赎楼")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id", value = "赎楼id", required = true, dataType = "long", paramType = "form",example = "1"),
-            @ApiImplicitParam(name = "status", value = "更新状态", allowableValues = "1,2", required = true, dataType = "int", paramType = "form",example = "1")
+            @ApiImplicitParam(name = "status", value = "更新状态", allowableValues = "1,2", required = true, dataType = "int", paramType = "form",example = "1"),
+            @ApiImplicitParam(name = "statusMessage", value = "审核信息", required = true, dataType = "string", paramType = "form",example = "审核通过")
     })
-    public void buildingRansomAudit(long id,int status){
-        buildingRansomService.audit(id,status);
+    public void buildingRansomAudit(long id,int status,String statusMessage){
+        buildingRansomService.audit(id,status,statusMessage);
     }
 
     @RequiresPermissions("admin")
@@ -190,10 +199,11 @@ public class AdminController{
     @ApiOperation(value="审核物业")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id", value = "物业id", required = true, dataType = "long", paramType = "form",example = "1"),
-            @ApiImplicitParam(name = "status", value = "更新状态", allowableValues = "1,2", required = true, dataType = "int", paramType = "form",example = "1")
+            @ApiImplicitParam(name = "status", value = "更新状态", allowableValues = "1,2", required = true, dataType = "int", paramType = "form",example = "1"),
+            @ApiImplicitParam(name = "statusMessage", value = "审核信息", required = true, dataType = "string", paramType = "form",example = "审核通过")
     })
-    public void buildingPropertyAudit(long id,int status){
-        buildingPropertyService.audit(id,status);
+    public void buildingPropertyAudit(long id,int status,String statusMessage){
+        buildingPropertyService.audit(id,status,statusMessage);
     }
 
     @RequiresPermissions("admin")
@@ -201,10 +211,11 @@ public class AdminController{
     @ApiOperation(value="审核其他借贷")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id", value = "其他借贷id", required = true, dataType = "long", paramType = "form",example = "1"),
-            @ApiImplicitParam(name = "status", value = "更新状态", allowableValues = "1,2", required = true, dataType = "int", paramType = "form",example = "1")
+            @ApiImplicitParam(name = "status", value = "更新状态", allowableValues = "1,2", required = true, dataType = "int", paramType = "form",example = "1"),
+            @ApiImplicitParam(name = "statusMessage", value = "审核信息", required = true, dataType = "string", paramType = "form",example = "审核通过")
     })
-    public void otherLoansAudit(long id,int status){
-        otherLoansService.audit(id,status);
+    public void otherLoansAudit(long id,int status,String statusMessage){
+        otherLoansService.audit(id,status,statusMessage);
     }
 
     @RequiresPermissions("admin")
@@ -213,21 +224,22 @@ public class AdminController{
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id", value = "用户id", required = true, dataType = "long", paramType = "form",example = "1"),
             @ApiImplicitParam(name = "status", value = "更新状态", allowableValues = "1,2", required = true, dataType = "int", paramType = "form",example = "1"),
-            @ApiImplicitParam(name = "permissions", value = "权限", required = false, dataType = "string", paramType = "form",example = "admin,bridge")
+            @ApiImplicitParam(name = "permissions", value = "权限", required = false, dataType = "string", paramType = "form",example = "admin,bridge"),
+            @ApiImplicitParam(name = "statusMessage", value = "审核信息", required = true, dataType = "string", paramType = "form",example = "审核通过")
     })
-    public void accountAudit(long id,int status,@RequestParam(required = false) String permissions){
-        accountService.audit(id,status,permissions);
+    public void accountAudit(long id,int status,@RequestParam(required = false) String permissions,String statusMessage){
+        accountService.audit(id,status,permissions,statusMessage);
     }
 
     @RequiresPermissions("admin")
     @RequestMapping(value = "permissions/update",method = RequestMethod.POST)
     @ApiOperation(value="权限更新")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "accountId", value = "用户id", required = true, dataType = "long", paramType = "form",example = "1"),
+            @ApiImplicitParam(name = "userId", value = "用户id", required = true, dataType = "long", paramType = "form",example = "1"),
             @ApiImplicitParam(name = "permissions", value = "权限", required = false, dataType = "string", paramType = "form",example = "admin,bridge")
     })
-    public void permissionUpdate(long accountId, String permissions){
-        accountService.permissionUpdate(accountId,permissions);
+    public void permissionUpdate(long userId, String permissions){
+        accountService.permissionUpdate(userId,permissions);
     }
 
     @RequiresPermissions("admin")
@@ -258,6 +270,24 @@ public class AdminController{
         accountService.register(nickName,userName,password,phone);
     }
 
+    @RequiresPermissions("admin")
+    @RequestMapping(value = "updatePwd",method = RequestMethod.POST)
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "oldPwd", value = "old password",required = true, dataType = "String", paramType = "form",example = "123456"),
+            @ApiImplicitParam(name = "newPwd", value = "new password", required = true, dataType = "String", paramType = "form",example = "654321")})
+    @ApiOperation(value="change password")
+    public void updatePwd(String oldPwd,String newPwd){
+        accountService.updatePwd(getUser().getId(),oldPwd,newPwd);
+    }
+
+    @RequiresPermissions("admin")
+    @RequestMapping(value = "getUser",method = RequestMethod.GET)
+    @ApiOperation(value="获取当前登陆用户")
+    public AccountDto getUser(){
+        Subject subject = SecurityUtils.getSubject();
+        return (AccountDto)subject.getPrincipal();
+    }
+
     @RequestMapping(value = "logout",method = RequestMethod.GET)
     @ApiOperation(value="退出登陆")
     public void logout(){
@@ -271,7 +301,7 @@ public class AdminController{
     @ApiImplicitParams({
             @ApiImplicitParam(name = "pageNum", value = "页码", required = true, dataType = "int", paramType = "query",example = "1"),
             @ApiImplicitParam(name = "pageSize", value = "条数", required = true, dataType = "int", paramType = "query",example = "10")})
-    public List<SysConfig> sysConfigPage(int pageNum, int pageSize){
+    public PageInfo<SysConfig> sysConfigPage(int pageNum, int pageSize){
         return sysConfigService.page(pageNum,pageSize);
     }
 

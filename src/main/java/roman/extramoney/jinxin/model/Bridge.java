@@ -101,6 +101,12 @@ public class Bridge implements Identify{
     @ApiModelProperty(value = "状态（0:待审核 1:审核通过 2:审核不通)",example = "0")
     private Integer status;
 
+    /**
+     * 审核信息
+     */
+    @ApiModelProperty(value = "审核信息",example = "审核通过")
+    private String statusMessage;
+
     @Column(name = "create_time")
     @ApiModelProperty(value = "创建时间",example = "2018-12-01 00:00:00")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")

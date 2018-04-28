@@ -1,5 +1,6 @@
 package roman.extramoney.jinxin.service;
 
+import com.github.pagehelper.PageInfo;
 import org.springframework.stereotype.Service;
 import roman.extramoney.jinxin.dao.ForumReplyDao;
 import roman.extramoney.jinxin.dao.impl.ForumReplyDaoImpl;
@@ -19,8 +20,8 @@ public class ForumReplyService extends BaseService<ForumReplyDao,ForumReply>{
         return dao.pageByPostId(postId,fromDate,toDate,pageNum,pageSize);
     }
 
-    public List<ForumReply> page(Date fromDate, Date toDate, int pageNum, int pageSize) {
-        return dao.page(fromDate,toDate,pageNum,pageSize);
+    public PageInfo<ForumReply> page(Date fromDate, Date toDate, int pageNum, int pageSize) {
+        return new PageInfo<>(dao.page(fromDate,toDate,pageNum,pageSize));
     }
 
 }
