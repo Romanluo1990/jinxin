@@ -41,7 +41,7 @@ spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     driverClassName: com.mysql.jdbc.Driver
-    url: jdbc:mysql://10.132.84.118:3306/jfzpay?autoReconnect=true&autoReconnectForPools=true&allowMultiQueries=true&useUnicode=true&characterEncoding=utf8mb4
+    url: jdbc:mysql://10.132.84.118:3306/jfzpay?autoReconnect=true&autoReconnectForPools=true&allowMultiQueries=true&useUnicode=true&characterEncoding=utf8
     username: jfzpayer
     password: 5giUgaUzcf5M5v
     hikari:
