@@ -62,7 +62,7 @@ public class ForumReplyController extends BaseController<ForumReplyService>{
                                                   @RequestParam(required = false) Date toDate, int pageNum, int pageSize){
         return service.pageByPostId(postId,fromDate,toDate,pageNum,pageSize).stream().map(forumReply->{
             Account account = accountService.getById(forumReply.getAccountId());
-            return new ForumReplyWithUser(account.getNickName(),forumReply);
+            return new ForumReplyWithUser(account.getNickName(),account.getImage(),forumReply);
         }).collect(Collectors.toList());
     }
 }

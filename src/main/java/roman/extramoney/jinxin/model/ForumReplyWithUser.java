@@ -17,10 +17,13 @@ public class ForumReplyWithUser {
 
     private String userName;
 
+    private String iamge;
+
     @JsonIgnore
     private ForumReply forumReply;
 
-    public ForumReplyWithUser(String userName, ForumReply forumReply) {
+    public ForumReplyWithUser(String userName,String iamge, ForumReply forumReply) {
+        this.iamge = iamge;
         this.userName = userName;
         this.forumReply = forumReply;
     }
@@ -35,5 +38,9 @@ public class ForumReplyWithUser {
 
     public String getUserName() {
         return userName;
+    }
+
+    public String getIamge() {
+        return iamge;
     }
 }
