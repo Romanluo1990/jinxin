@@ -65,10 +65,10 @@ public class WXService {
         return responseMap;
     }
 
-    public void register(String code, String nickName, int type, String phone){
+    public void register(String code, String nickName,String image, int type, String phone){
         Map<String, String> responseMap = wxLogin(code);
         String openId = responseMap.get("openid");
-        accountService.register(openId,nickName,type,phone);
+        accountService.register(openId,nickName,image,type,phone);
     }
 
     public String getAppid() {

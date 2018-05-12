@@ -10,7 +10,7 @@ public interface AccountDao extends BaseDao<Account>{
 
     Account getByOpenId(String openId);
 
-    void register(String openId, String nickName, int type, String phone);
+    void register(String openId, String nickName, String image,int type, String phone);
 
     void register(String nickName, String userName, String password, String salt, int type, String phone);
 

@@ -39,11 +39,11 @@ public class AccountService extends BaseService<AccountDao,Account>{
         return dao.getByOpenId(openId);
     }
 
-    public void register(String openId,  String nickName,int type,String phone) {
-        dao.register(openId,nickName,type,phone);
+    public void register(String openId,  String nickName,String image, int type,String phone) {
+        dao.register(openId,nickName,image,type,phone);
     }
 
-    public void register(String nickName, String userName,  String password, String phone) {
+    public void register(String nickName, String userName, String password, String phone) {
         String salt = randomNumberGenerator.nextBytes().toHex();
         dao.register(nickName,userName,encryptPassword(password,salt),salt,4,phone);
     }

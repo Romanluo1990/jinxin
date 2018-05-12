@@ -57,11 +57,12 @@ public class AccountController extends BaseController<AccountService>{
     @ApiImplicitParams({
             @ApiImplicitParam(name = "code", value = "小程序登陆code", required = true, dataType = "String", paramType = "form",example = "123456789"),
             @ApiImplicitParam(name = "nickName", value = "用户昵称", required = true, dataType = "String", paramType = "form",example = "张三"),
+            @ApiImplicitParam(name = "image", value = "用户头像", required = true, dataType = "String", paramType = "form",example = "url"),
             @ApiImplicitParam(name = "type", value = "用户类型（1：客户经理，2：地产中介，3：替他，4：内部人员）", allowableValues = "1,2,3,4",required = true, dataType = "int", paramType = "form",example = "123456789"),
             @ApiImplicitParam(name = "phone", value = "联系电话", required = false, dataType = "String", paramType = "form",example = "18888888888")
     })
-    private void register(String code, String nickName,int type,@RequestParam(required = false) String phone){
-        wxService.register(code, nickName,type,phone);
+    private void register(String code, String nickName, String image,int type,@RequestParam(required = false) String phone){
+        wxService.register(code, nickName,image,type,phone);
     }
 
 

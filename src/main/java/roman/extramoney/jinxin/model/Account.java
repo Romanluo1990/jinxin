@@ -23,6 +23,8 @@ public class Account implements Identify{
     @ApiModelProperty(value = "用户昵称",example = "张宝宝")
     private String nickName;
 
+    private String image;
+
     @Column(name = "phone")
     @ApiModelProperty(value = "电话",example = "18888888888")
     private String phone;

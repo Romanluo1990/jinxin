@@ -58,7 +58,7 @@ public class ForumReplyController extends BaseController<ForumReplyService>{
             @ApiImplicitParam(name = "toDate", value = "结束时间", required = false, dataType = "java.util.Date", paramType = "query",example = "2018-01-02 00:00:00"),
             @ApiImplicitParam(name = "pageNum", value = "页码", required = true, dataType = "int", paramType = "query",example = "1"),
             @ApiImplicitParam(name = "pageSize", value = "条数", required = true, dataType = "int", paramType = "query",example = "10")})
-    private List<ForumReplyWithUser> pageByPostId(@PathVariable long postId, @RequestParam(required = false) Date fromDate,
+    public List<ForumReplyWithUser> pageByPostId(@PathVariable long postId, @RequestParam(required = false) Date fromDate,
                                                   @RequestParam(required = false) Date toDate, int pageNum, int pageSize){
         return service.pageByPostId(postId,fromDate,toDate,pageNum,pageSize).stream().map(forumReply->{
             Account account = accountService.getById(forumReply.getAccountId());

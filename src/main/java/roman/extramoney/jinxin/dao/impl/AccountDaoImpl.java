@@ -22,10 +22,11 @@ public class AccountDaoImpl extends BaseDaoImpl<AccountMapper,Account> implement
     }
 
     @Override
-    public void register(String openId, String nickName, int type, String phone) {
+    public void register(String openId, String nickName, String image,int type, String phone) {
         Account account = new Account();
         account.setOpenId(openId);
         account.setNickName(nickName);
+        account.setImage(image);
         account.setType(type);
         account.setPhone(phone);
         mapper.insertSelective(account);
