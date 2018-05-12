@@ -51,6 +51,6 @@ spring:
 
 #file config begin
 file:
-  location: /data/jfzpay/jinxin/apache-tomcat-8.5.6/file
+  location: /data/thirdpart/jxtz/apache-tomcat-8.5.6/file
 #file config end
 
