@@ -150,7 +150,7 @@ public class AdminController{
                                                        @RequestParam(required = false) Date toDate, int pageNum, int pageSize){
         List<ForumReplyWithUser> forumReplyWithUsers = forumReplyService.page(fromDate,toDate,pageNum,pageSize).getList().stream().map(forumReply->{
             Account account = accountService.getById(forumReply.getAccountId());
-            return new ForumReplyWithUser(account.getNickName(),forumReply);
+            return new ForumReplyWithUser(account.getNickName(),account.getImage(),forumReply);
         }).collect(Collectors.toList());
         return new PageInfo<>(forumReplyWithUsers);
     }

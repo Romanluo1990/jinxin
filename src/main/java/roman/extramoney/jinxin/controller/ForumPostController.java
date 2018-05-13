@@ -61,4 +61,21 @@ public class ForumPostController extends BaseController<ForumPostService>{
                 })
                 .collect(Collectors.toList());
     }
+
+    @RequestMapping(value = "page",method = RequestMethod.GET)
+    @ApiOperation(value="根据用户分页获取帖子")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "fromDate", value = "起始时间", required = false, dataType = "ljava.util.Date", paramType = "query",example = "2018-01-01 00:00:00"),
+            @ApiImplicitParam(name = "toDate", value = "结束时间", required = false, dataType = "java.util.Date", paramType = "query",example = "2018-01-02 00:00:00"),
+            @ApiImplicitParam(name = "pageNum", value = "页码", required = true, dataType = "int", paramType = "query",example = "1"),
+            @ApiImplicitParam(name = "pageSize", value = "条数", required = true, dataType = "int", paramType = "query",example = "10")})
+    private List<ForumPostVo> pageByAccountId(@RequestParam(required = false) Date fromDate,
+                                              @RequestParam(required = false) Date toDate, int pageNum, int pageSize){
+        return service.page(fromDate,toDate,pageNum,pageSize).getList().parallelStream()
+                .map(ForumPostVo::new)
+                .peek(forumPostVo->{
+                    forumPostVo.setForumReplys(forumReplyController.pageByPostId(forumPostVo.getId(),null,null,-1,0));
+                })
+                .collect(Collectors.toList());
+    }
 }
