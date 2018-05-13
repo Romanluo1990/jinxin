@@ -108,4 +108,11 @@ public class AccountService extends BaseService<AccountDao,Account>{
         account.setPassword(encryptPassword(newPwd,account.getSalt()));
         saveOrUpdate(account);
     }
+
+    public void updateImage(long accountId, String image) {
+        Account account = new Account();
+        account.setId(accountId);
+        account.setImage(image);
+        saveOrUpdate(account);
+    }
 }

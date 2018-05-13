@@ -65,6 +65,11 @@ public class AccountController extends BaseController<AccountService>{
         wxService.register(code, nickName,image,type,phone);
     }
 
+    @RequestMapping(value = "image/update")
+    private void updateImage(long accountId,String image){
+        service.updateImage(accountId,image);
+    }
+
 
     @RequestMapping(value = "permission/list",method = RequestMethod.GET)
     @ApiOperation(value="获取用户权限",notes = "获取用户权限")
