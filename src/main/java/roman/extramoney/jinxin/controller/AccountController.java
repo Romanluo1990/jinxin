@@ -65,7 +65,7 @@ public class AccountController extends BaseController<AccountService>{
         wxService.register(code, nickName,image,type,phone);
     }
 
-    @RequestMapping(value = "image/update")
+    @RequestMapping(value = "image/update",method = RequestMethod.POST)
     private void updateImage(long accountId,String image){
         service.updateImage(accountId,image);
     }
