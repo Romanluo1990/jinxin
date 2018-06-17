@@ -13,7 +13,9 @@ import roman.extramoney.jinxin.service.ForumReplyService;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Api("帖子回复信息接口")
@@ -33,9 +35,10 @@ public class ForumReplyController extends BaseController<ForumReplyService>{
 
     @RequestMapping(value = "saveOrUpdate",method = RequestMethod.POST)
     @ApiOperation(value="保存或更新帖子回复详情",notes="无ID保存，有ID更新")
-    private ForumReply saveOrUpdate(@RequestBody ForumReply forumReply){
+    private ForumReplyWithUser saveOrUpdate(@RequestBody ForumReply forumReply){
         service.saveOrUpdate(forumReply);
-        return forumReply;
+        Account account = getCurAccount().getAccount();
+        return new ForumReplyWithUser(account.getNickName(),account.getImage(),forumReply);
     }
 
     @RequestMapping(value = "account/page",method = RequestMethod.GET)
@@ -45,9 +48,13 @@ public class ForumReplyController extends BaseController<ForumReplyService>{
             @ApiImplicitParam(name = "toDate", value = "结束时间", required = false, dataType = "java.util.Date", paramType = "query",example = "2018-01-02 00:00:00"),
             @ApiImplicitParam(name = "pageNum", value = "页码", required = true, dataType = "int", paramType = "query",example = "1"),
             @ApiImplicitParam(name = "pageSize", value = "条数", required = true, dataType = "int", paramType = "query",example = "10")})
-    private List<ForumReply> pageByAccountId(long accountId, @RequestParam(required = false) Date fromDate,
+    private List<ForumReplyWithUser> pageByAccountId(long accountId, @RequestParam(required = false) Date fromDate,
                                          @RequestParam(required = false) Date toDate, int pageNum, int pageSize){
-        return service.pageByAccountId(accountId,fromDate,toDate,pageNum,pageSize);
+        Map<Long,Account> accountMap = new HashMap<>();
+        return service.pageByAccountId(accountId,fromDate,toDate,pageNum,pageSize).stream().map(forumReply->{
+            Account account = accountService.getById(forumReply.getAccountId(), accountMap);
+            return new ForumReplyWithUser(account.getNickName(),account.getImage(),forumReply);
+        }).collect(Collectors.toList());
     }
 
     @RequestMapping(value = "post_{postId}/page",method = RequestMethod.GET)
@@ -60,8 +67,9 @@ public class ForumReplyController extends BaseController<ForumReplyService>{
             @ApiImplicitParam(name = "pageSize", value = "条数", required = true, dataType = "int", paramType = "query",example = "10")})
     public List<ForumReplyWithUser> pageByPostId(@PathVariable long postId, @RequestParam(required = false) Date fromDate,
                                                   @RequestParam(required = false) Date toDate, int pageNum, int pageSize){
+        Map<Long,Account> accountMap = new HashMap<>();
         return service.pageByPostId(postId,fromDate,toDate,pageNum,pageSize).stream().map(forumReply->{
-            Account account = accountService.getById(forumReply.getAccountId());
+            Account account = accountService.getById(forumReply.getAccountId(), accountMap);
             return new ForumReplyWithUser(account.getNickName(),account.getImage(),forumReply);
         }).collect(Collectors.toList());
     }

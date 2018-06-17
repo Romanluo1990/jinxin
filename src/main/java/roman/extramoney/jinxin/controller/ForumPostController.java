@@ -4,15 +4,18 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import org.apache.ibatis.annotations.Delete;
 import org.springframework.web.bind.annotation.*;
 import roman.extramoney.jinxin.controller.vo.ForumPostVo;
+import roman.extramoney.jinxin.model.Account;
 import roman.extramoney.jinxin.model.ForumPost;
+import roman.extramoney.jinxin.service.AccountService;
 import roman.extramoney.jinxin.service.ForumPostService;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Api("帖子信息接口")
@@ -22,6 +25,9 @@ public class ForumPostController extends BaseController<ForumPostService>{
 
     @Resource
     private ForumReplyController forumReplyController;
+
+    @Resource
+    private AccountService accountService;
 
     @RequestMapping(value = "get/{id}",method = RequestMethod.GET)
     @ApiOperation(value="获取帖子详情",notes = "根据ID获取帖子信息")
@@ -54,26 +60,30 @@ public class ForumPostController extends BaseController<ForumPostService>{
             @ApiImplicitParam(name = "pageSize", value = "条数", required = true, dataType = "int", paramType = "query",example = "10")})
     private List<ForumPostVo> pageByAccountId(long accountId, @RequestParam(required = false) Date fromDate,
                                               @RequestParam(required = false) Date toDate, int pageNum, int pageSize){
+        Map<Long,Account> accountMap = new HashMap<>();
         return service.pageByAccountId(accountId,fromDate,toDate,pageNum,pageSize).parallelStream()
                 .map(ForumPostVo::new)
                 .peek(forumPostVo->{
+                    forumPostVo.setAccount(accountService.getById(forumPostVo.getAccountId(),accountMap));
                     forumPostVo.setForumReplys(forumReplyController.pageByPostId(forumPostVo.getId(),null,null,-1,0));
                 })
                 .collect(Collectors.toList());
     }
 
     @RequestMapping(value = "page",method = RequestMethod.GET)
-    @ApiOperation(value="根据用户分页获取帖子")
+    @ApiOperation(value="分页获取帖子")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "fromDate", value = "起始时间", required = false, dataType = "ljava.util.Date", paramType = "query",example = "2018-01-01 00:00:00"),
             @ApiImplicitParam(name = "toDate", value = "结束时间", required = false, dataType = "java.util.Date", paramType = "query",example = "2018-01-02 00:00:00"),
             @ApiImplicitParam(name = "pageNum", value = "页码", required = true, dataType = "int", paramType = "query",example = "1"),
             @ApiImplicitParam(name = "pageSize", value = "条数", required = true, dataType = "int", paramType = "query",example = "10")})
-    private List<ForumPostVo> pageByAccountId(@RequestParam(required = false) Date fromDate,
+    private List<ForumPostVo> page(@RequestParam(required = false) Date fromDate,
                                               @RequestParam(required = false) Date toDate, int pageNum, int pageSize){
+        Map<Long,Account> accountMap = new HashMap<>();
         return service.page(fromDate,toDate,pageNum,pageSize).getList().parallelStream()
                 .map(ForumPostVo::new)
                 .peek(forumPostVo->{
+                    forumPostVo.setAccount(accountService.getById(forumPostVo.getAccountId(),accountMap));
                     forumPostVo.setForumReplys(forumReplyController.pageByPostId(forumPostVo.getId(),null,null,-1,0));
                 })
                 .collect(Collectors.toList());

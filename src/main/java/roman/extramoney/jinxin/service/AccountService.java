@@ -20,6 +20,7 @@ import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -114,5 +115,16 @@ public class AccountService extends BaseService<AccountDao,Account>{
         account.setId(accountId);
         account.setImage(image);
         saveOrUpdate(account);
+    }
+
+    public Account getById(long accountId, Map<Long, Account> accountCache) {
+        Account account = accountCache.get(accountId);
+        if(account == null){
+            account = getById(accountId);
+            if(account != null){
+                accountCache.put(accountId, account);
+            }
+        }
+        return account;
     }
 }

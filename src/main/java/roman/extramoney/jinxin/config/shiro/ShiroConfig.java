@@ -101,7 +101,7 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/admin/login", "anon");
         filterChainDefinitionMap.put("/admin/register", "anon");
         filterChainDefinitionMap.put("/exception", "anon");
-        filterChainDefinitionMap.put("/file/download/**", "anon");
+        filterChainDefinitionMap.put("/file/**", "anon");
         filterChainDefinitionMap.put("/**", "authc");
 
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);

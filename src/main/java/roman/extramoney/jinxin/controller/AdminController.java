@@ -18,7 +18,9 @@ import roman.extramoney.jinxin.service.*;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Api("管理员接口")
@@ -148,8 +150,9 @@ public class AdminController{
             @ApiImplicitParam(name = "pageSize", value = "条数", required = true, dataType = "int", paramType = "query",example = "10")})
     public PageInfo<ForumReplyWithUser> forumReplyPage(@RequestParam(required = false) Date fromDate,
                                                        @RequestParam(required = false) Date toDate, int pageNum, int pageSize){
+        Map<Long,Account> accountMap = new HashMap<>();
         List<ForumReplyWithUser> forumReplyWithUsers = forumReplyService.page(fromDate,toDate,pageNum,pageSize).getList().stream().map(forumReply->{
-            Account account = accountService.getById(forumReply.getAccountId());
+            Account account = accountService.getById(forumReply.getAccountId(),accountMap);
             return new ForumReplyWithUser(account.getNickName(),account.getImage(),forumReply);
         }).collect(Collectors.toList());
         return new PageInfo<>(forumReplyWithUsers);

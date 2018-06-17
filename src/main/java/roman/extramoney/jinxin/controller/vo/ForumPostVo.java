@@ -2,6 +2,7 @@ package roman.extramoney.jinxin.controller.vo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import roman.extramoney.jinxin.model.Account;
 import roman.extramoney.jinxin.model.ForumPost;
 import roman.extramoney.jinxin.model.ForumReplyWithUser;
 
@@ -14,7 +15,18 @@ public class ForumPostVo {
     @JsonIgnore
     private ForumPost forumPost;
 
+    @JsonIgnore
+    private Account account;
+
     private List<ForumReplyWithUser> forumReplys;
+
+    public String getNickName() {
+        return account.getNickName();
+    }
+
+    public String getImage() {
+        return account.getImage();
+    }
 
     public ForumPostVo(ForumPost forumPost) {
         this.forumPost = forumPost;

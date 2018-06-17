@@ -75,7 +75,7 @@ public class BridgeController extends BaseController<BridgeService>{
     }
 
     @RequestMapping(value = "{month}/balance",method = RequestMethod.GET)
-    @ApiOperation(value="根据日前获取可用余额")
+    @ApiOperation(value="根据月份获取可用余额")
     @ApiImplicitParam(name = "month", value = "月份", required = true, dataType = "String", paramType = "path",example = "201801")
     public Map<String,BigDecimal> monthBalance(@PathVariable String month) throws ParseException {
         Date date = DateUtils.parseDate(month,"yyyyMM");

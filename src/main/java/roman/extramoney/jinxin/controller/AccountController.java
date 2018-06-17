@@ -4,6 +4,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.ExcessiveAttemptsException;
@@ -18,12 +19,16 @@ import org.springframework.web.servlet.ModelAndView;
 import roman.extramoney.jinxin.config.shiro.AccountDto;
 import roman.extramoney.jinxin.config.shiro.WxRealm;
 import roman.extramoney.jinxin.config.shiro.WxToken;
+import roman.extramoney.jinxin.controller.vo.AccountVo;
 import roman.extramoney.jinxin.exception.JInXinRunTimeException;
+import roman.extramoney.jinxin.model.Account;
 import roman.extramoney.jinxin.service.AccountService;
 import roman.extramoney.jinxin.service.BridgeService;
 import roman.extramoney.jinxin.service.WXService;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.annotation.Resource;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 @Api("用户接口")
@@ -65,11 +70,20 @@ public class AccountController extends BaseController<AccountService>{
         wxService.register(code, nickName,image,type,phone);
     }
 
+    @ApiOperation(value="更新头像")
     @RequestMapping(value = "image/update",method = RequestMethod.POST)
     private void updateImage(long accountId,String image){
         service.updateImage(accountId,image);
     }
 
+    @ApiOperation(value="更新用户信息")
+    @RequestMapping(value = "info/update",method = RequestMethod.POST)
+    private void updateInfo(@ApiIgnore long accountId, AccountVo account) throws InvocationTargetException, IllegalAccessException {
+        Account _account = new Account();
+        BeanUtils.copyProperties(_account,account);
+        _account.setId(accountId);
+        service.updateByIdSelective(_account);
+    }
 
     @RequestMapping(value = "permission/list",method = RequestMethod.GET)
     @ApiOperation(value="获取用户权限",notes = "获取用户权限")
